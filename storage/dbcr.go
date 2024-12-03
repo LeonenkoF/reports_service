@@ -23,14 +23,19 @@ var (
 		closing_comment	коментарий админа при закрытии жалобы
 						*** Возможно поле избыточно, но было бы интересно чем в итоге закончилась жалоба
 	*/
+	schTypes = `
+	CREATE TYPE PRIORITY_TYPE AS ENUM ('high','medium','low');
+	CREATE TYPE STAGE_TYPE AS ENUM ('new','inprogress','done', 'canceled');
+	CREATE TYPE ROLE_TYPE AS ENUM ('admin','user','superadmin','superuser','guest');
+`
 	schReport string = `
 CREATE TABLE IF NOT EXISTS reports (
 	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	uuid UUID,
 	user_uuid UUID,
 	description TEXT,
-	priority INT,
-	stage INT,
+	priority PRIORITY_TYPE,
+	stage STAGE_TYPE,
 	category INT,
 	groupp UUID,
 	groupp_name VARCHAR(32),
@@ -53,7 +58,7 @@ CREATE TABLE IF NOT EXISTS groupp (
 	schGroups string = `
 CREATE TABLE IF NOT EXISTS groups (
 	id INT,
-	group_name VARCHAR(32)
+	group_name VARCHAR(32),
 	rep_id INT
 )
 CREATE INDEX IF NOT EXISTS idx_id ON groups (id); 
@@ -73,7 +78,7 @@ CREATE TABLE IF NOT EXISTS comments (
 	user_uuid UUID,
 	comment TEXT,
     created_at DATE NOT NULL DEFAULT CURRENT_DATE,	
-    updated_at DATE NOT NULL DEFAULT CURRENT_DATE,	
+    updated_at DATE NOT NULL DEFAULT CURRENT_DATE	
 );
 `
 	// таблица пользователей
@@ -94,18 +99,20 @@ CREATE TABLE IF NOT EXISTS users (
 	mail VARCHAR(64),
 	phone VARCHAR(16),
 	nick VARCHAR(16),
-	role INT,
+	role ROLE_TYPE,
     created_at DATE NOT NULL DEFAULT CURRENT_DATE,	
-    updated_at DATE NOT NULL DEFAULT CURRENT_DATE,	
+    updated_at DATE NOT NULL DEFAULT CURRENT_DATE	
 );
 `
 	// список стадий обработки *** возможно нужно просто enum, но возможное появление новых стадий будет вызывать переписывание кода
-	schStage string = `
-CREATE TABLE IF NOT EXISTS stages (
-	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	stage VARCHAR(10)
-)	
-`
+	/*
+	   	schStage string = `
+	   CREATE TABLE IF NOT EXISTS stages (
+	   	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	   	stage VARCHAR(10)
+	   )
+	   `
+	*/
 	// список тем *** возможно нужно просто enum, но возможное появление новых тем будет вызывать переписывание кода
 	schCategory string = `
 CREATE TABLE IF NOT EXISTS categoryes (
@@ -115,16 +122,20 @@ CREATE TABLE IF NOT EXISTS categoryes (
 `
 
 	// список ролей участников процесса *** возможно нужно просто enum, но возможное появление новых ролей будет вызывать переписывание кода
+/*
 	schRole string = `
 CREATE TABLE IF NOT EXISTS roles (
 	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	role VARCHAR(10)
-)	
+)
 `
+*/
+/*
 	schPriority string = `
 CREATE TABLE IF NOT EXISTS roles (
 	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	priority VARCHAR(10)
-)	
+)
 `
+*/
 )

@@ -83,7 +83,8 @@ func InitDBase() (*pg.DB, error) {
 		Database: "testdb",         // Имя базы данных
 	})
 	// создание таблицы
-	if _, err := db.Exec(schReport); err != nil {
+	//	if _, err := db.Exec(schTypes + schReport + schGroups + schUsers + schCategory); err != nil {
+	if _, err := db.Exec(schTypes + schReport + schGroups + schUsers + schCategory); err != nil {
 		return nil, err
 	}
 	// Проверка соединения
