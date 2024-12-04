@@ -28,9 +28,6 @@ CREATE TABLE IF NOT EXISTS reports (
 	stage STAGE_TYPE,
 	category INT,
 	groupp UUID,
-	groupp_name VARCHAR(32),
-	adm_uuid UUID,
-	closing_comment TEXT,
 	created_at DATE NOT NULL DEFAULT CURRENT_DATE,
 	updated_at DATE NOT NULL DEFAULT CURRENT_DATE
 );

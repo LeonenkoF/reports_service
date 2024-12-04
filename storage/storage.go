@@ -110,12 +110,6 @@ func InitDBase() (*pg.DB, error) {
 		return nil, err
 	}
 	fmt.Println("Users ok")
-	// categories
-	if err := loadSQLFile(db, "migration/categories.sql"); err != nil {
-		log.Fatalf("Create categories error %v\n", err)
-		return nil, err
-	}
-	fmt.Println("Categories ok")
 	// Проверка соединения
 	ctx := context.Background()
 	if err := db.Ping(ctx); err != nil {
