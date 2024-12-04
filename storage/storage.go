@@ -97,53 +97,25 @@ func InitDBase() (*pg.DB, error) {
 		log.Fatalf("Create reports error %v\n", err)
 		return nil, err
 	}
+	fmt.Println("Reports ok")
 	// groups
 	if err := loadSQLFile(db, "migration/groupps.sql"); err != nil {
 		log.Fatalf("Create groupps error %v\n", err)
 		return nil, err
 	}
+	fmt.Println("Groupps ok")
 	// users
 	if err := loadSQLFile(db, "migration/users.sql"); err != nil {
 		log.Fatalf("Create users error %v\n", err)
 		return nil, err
 	}
+	fmt.Println("Users ok")
 	// categories
 	if err := loadSQLFile(db, "migration/categories.sql"); err != nil {
 		log.Fatalf("Create categories error %v\n", err)
 		return nil, err
 	}
-
-	/*
-		if _, err := db.Exec(schTypes); err != nil {
-			fmt.Printf("Create type error %v\n", err)
-			// return nil, err
-		} else {
-			fmt.Println("Create type ok")
-		}
-		if _, err := db.Exec(schReport); err != nil {
-			log.Fatalf("Create reports error %v\n", err)
-			return nil, err
-		}
-		fmt.Println("Create reports ok")
-
-		if _, err := db.Exec(schGroupps); err != nil {
-			log.Fatalf("Create groups error %v\n", err)
-			return nil, err
-		}
-		fmt.Println("Create groups ok")
-
-		if _, err := db.Exec(schUsers); err != nil {
-			log.Fatalf("Create users error %v\n", err)
-			return nil, err
-		}
-		fmt.Println("Create users ok")
-
-		if _, err := db.Exec(schCategory); err != nil {
-			log.Fatalf("Create category error %v\n", err)
-			return nil, err
-		}
-		fmt.Println("Create category ok")
-	*/
+	fmt.Println("Categories ok")
 	// Проверка соединения
 	ctx := context.Background()
 	if err := db.Ping(ctx); err != nil {
@@ -154,7 +126,6 @@ func InitDBase() (*pg.DB, error) {
 	return db, err
 }
 
-// func loadSQLFile(db *sqlx.DB, sqlFile string) error {
 func loadSQLFile(db *pg.DB, sqlFile string) error {
 	file, err := os.ReadFile(sqlFile)
 	if err != nil {
