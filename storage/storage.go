@@ -4,6 +4,9 @@ package storage
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
+	"strings"
 	"time"
 
 	//_ "modernc.org/sqlite"
@@ -82,11 +85,65 @@ func InitDBase() (*pg.DB, error) {
 		Password: "password",       // Пароль
 		Database: "testdb",         // Имя базы данных
 	})
-	// создание таблицы
-	//	if _, err := db.Exec(schTypes + schReport + schGroups + schUsers + schCategory); err != nil {
-	if _, err := db.Exec(schTypes + schReport + schGroups + schUsers + schCategory); err != nil {
+	// создание таблиц
+	// types
+	if err := loadSQLFile(db, "migration/types.sql"); err != nil {
+		fmt.Printf("Create types error %v\n", err)
+	} else {
+		fmt.Println("Create type ok")
+	}
+	// reports
+	if err := loadSQLFile(db, "migration/reports.sql"); err != nil {
+		log.Fatalf("Create reports error %v\n", err)
 		return nil, err
 	}
+	// groups
+	if err := loadSQLFile(db, "migration/groupps.sql"); err != nil {
+		log.Fatalf("Create groupps error %v\n", err)
+		return nil, err
+	}
+	// users
+	if err := loadSQLFile(db, "migration/users.sql"); err != nil {
+		log.Fatalf("Create users error %v\n", err)
+		return nil, err
+	}
+	// categories
+	if err := loadSQLFile(db, "migration/categories.sql"); err != nil {
+		log.Fatalf("Create categories error %v\n", err)
+		return nil, err
+	}
+
+	/*
+		if _, err := db.Exec(schTypes); err != nil {
+			fmt.Printf("Create type error %v\n", err)
+			// return nil, err
+		} else {
+			fmt.Println("Create type ok")
+		}
+		if _, err := db.Exec(schReport); err != nil {
+			log.Fatalf("Create reports error %v\n", err)
+			return nil, err
+		}
+		fmt.Println("Create reports ok")
+
+		if _, err := db.Exec(schGroupps); err != nil {
+			log.Fatalf("Create groups error %v\n", err)
+			return nil, err
+		}
+		fmt.Println("Create groups ok")
+
+		if _, err := db.Exec(schUsers); err != nil {
+			log.Fatalf("Create users error %v\n", err)
+			return nil, err
+		}
+		fmt.Println("Create users ok")
+
+		if _, err := db.Exec(schCategory); err != nil {
+			log.Fatalf("Create category error %v\n", err)
+			return nil, err
+		}
+		fmt.Println("Create category ok")
+	*/
 	// Проверка соединения
 	ctx := context.Background()
 	if err := db.Ping(ctx); err != nil {
@@ -95,4 +152,29 @@ func InitDBase() (*pg.DB, error) {
 	}
 	fmt.Println("База подключена (Ping Ok)")
 	return db, err
+}
+
+// func loadSQLFile(db *sqlx.DB, sqlFile string) error {
+func loadSQLFile(db *pg.DB, sqlFile string) error {
+	file, err := os.ReadFile(sqlFile)
+	if err != nil {
+		return err
+	}
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		tx.Rollback()
+	}()
+	for _, q := range strings.Split(string(file), ";") {
+		q := strings.TrimSpace(q)
+		if q == "" {
+			continue
+		}
+		if _, err := tx.Exec(q); err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
 }
