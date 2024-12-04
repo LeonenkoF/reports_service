@@ -2,7 +2,18 @@ package storage
 
 // запросы создания таблиц сервица
 var (
-
+	schTypes = `
+	CREATE TYPE PRIORITY_TYPE AS ENUM ('high','medium','low');
+	CREATE TYPE STAGE_TYPE AS ENUM ('new','inprogress','done', 'canceled');
+	CREATE TYPE ROLE_TYPE AS ENUM ('admin','user','superadmin','superuser','guest');
+`
+	/*
+	   	schTypes = `
+	   	CREATE TYPE IF NOT EXISTS PRIORITY_TYPE AS ENUM ('high','medium','low');
+	   	CREATE TYPE IF NOT EXISTS STAGE_TYPE AS ENUM ('new','inprogress','done', 'canceled');
+	   	CREATE TYPE IF NOT EXISTS ROLE_TYPE AS ENUM ('admin','user','superadmin','superuser','guest');
+	   `
+	*/
 	// report - таблица жалоб
 	/*
 		id				порядковый номер жалобы
@@ -23,11 +34,6 @@ var (
 		closing_comment	коментарий админа при закрытии жалобы
 						*** Возможно поле избыточно, но было бы интересно чем в итоге закончилась жалоба
 	*/
-	schTypes = `
-	CREATE TYPE PRIORITY_TYPE AS ENUM ('high','medium','low');
-	CREATE TYPE STAGE_TYPE AS ENUM ('new','inprogress','done', 'canceled');
-	CREATE TYPE ROLE_TYPE AS ENUM ('admin','user','superadmin','superuser','guest');
-`
 	schReport string = `
 CREATE TABLE IF NOT EXISTS reports (
 	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -48,21 +54,23 @@ CREATE INDEX IF NOT EXISTS idx_created_at ON reports (created_at);
 `
 	// таблица группы (под каждую группу своя таблица с уникальным именем)
 	// !!! %s имя уникально НЕ groupp !!!
-	schGroup string = `
+	schGroupp string = `
 CREATE TABLE IF NOT EXISTS groupp (
 	rep_id INT
 )
 `
 	// или таблица групп (под все группы одна таблица)
 	// *** недостаток - дублирование данных. преимущество - предположительно более легкий поиск
-	schGroups string = `
-CREATE TABLE IF NOT EXISTS groups (
-	id INT,
+	schGroupps string = `
+CREATE TABLE IF NOT EXISTS groupps (
+	groupp UUID,
 	group_name VARCHAR(32),
 	rep_id INT
-)
-CREATE INDEX IF NOT EXISTS idx_id ON groups (id); 
+);
+CREATE INDEX IF NOT EXISTS idx_id ON groupps (group_name);
 `
+	//CREATE INDEX IF NOT EXISTS idx_id ON groupps (id);
+
 	// таблица диалога по жалобе. каждому диалогу своя таблица
 	/*
 			id 			идентификатор
@@ -110,7 +118,7 @@ CREATE TABLE IF NOT EXISTS users (
 	   CREATE TABLE IF NOT EXISTS stages (
 	   	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	   	stage VARCHAR(10)
-	   )
+	   );
 	   `
 	*/
 	// список тем *** возможно нужно просто enum, но возможное появление новых тем будет вызывать переписывание кода
@@ -118,7 +126,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS categoryes (
 	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	category VARCHAR(32)
-)	
+);	
 `
 
 	// список ролей участников процесса *** возможно нужно просто enum, но возможное появление новых ролей будет вызывать переписывание кода
