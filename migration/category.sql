@@ -1,7 +1,5 @@
 CREATE TABLE IF NOT EXISTS  category (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(32),
-    report_id INT,
     created_at DATE NOT NULL DEFAULT CURRENT_DATE
-    FOREIGN KEY (report_id) REFERENCES reports (id)    
 )
