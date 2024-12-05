@@ -1,3 +1,15 @@
+	/*
+	reports - таблица жалоб
+	--------------------------------------------------
+		id				порядковый номер жалобы
+		uuid 			идентификация жалобы (по ТЗ)
+		user_uuid 		индентификатор автора-пользователя
+		description 	текст жалобы
+		priority		приоритет ('high','medium','low')
+		stage			стадия обработки ('new','inprogress','done', 'canceled')
+		category		категория (тема) жалобы.
+		groupp 			группа жалобы. Используется при объединении жалоб в группы.
+	*/
 CREATE TABLE IF NOT EXISTS reports (
 	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	uuid UUID,
@@ -7,9 +19,6 @@ CREATE TABLE IF NOT EXISTS reports (
 	stage STAGE_TYPE,
 	category INT,
 	groupp UUID,
-	groupp_name VARCHAR(32),
-	adm_uuid UUID,
-	closing_comment TEXT,
 	created_at DATE NOT NULL DEFAULT CURRENT_DATE,
 	updated_at DATE NOT NULL DEFAULT CURRENT_DATE
 );
