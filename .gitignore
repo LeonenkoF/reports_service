@@ -1,7 +1,5 @@
-1/
-2/
-edb/
 *.exe
 go.*
 main.go
 storage/*.*
+migration/example.sql

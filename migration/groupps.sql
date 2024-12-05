@@ -1,7 +1,0 @@
-CREATE TABLE IF NOT EXISTS groupps (
-	id  INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	groupp UUID,
-	group_name VARCHAR(32)
-);
-CREATE INDEX IF NOT EXISTS idx_name ON groupps (group_name);
-
