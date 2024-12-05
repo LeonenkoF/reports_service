@@ -1,5 +1,5 @@
 *.exe
 go.*
 main.go
-storage/*.*
+storage/
 migration/example.sql
