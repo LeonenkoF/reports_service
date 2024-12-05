@@ -1,3 +1,4 @@
 *.exe
 go.*
 main.go
+storage/*.*
