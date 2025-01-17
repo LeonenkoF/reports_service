@@ -1,5 +1,6 @@
 services:
   memcached:
+    container_name: memcached_masterskaya_1
     image: memcached
     command:
       - --conn-limit=1024
@@ -47,7 +48,7 @@ services:
       - "${APP_PORT}:${APP_PORT}"
     environment:
       APP_PORT: ${APP_PORT}
-      DB_HOST: ${DB_HOST}
+      DB_HOST: postgres_complaint_service_1
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}

@@ -3,6 +3,7 @@ package repository
 import (
 	"complaint_service/internal/config"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/bradfitz/gomemcache/memcache"
@@ -20,6 +21,8 @@ func NewSessionCache() *SessionCache {
 	}
 
 	connStr := fmt.Sprintf("%v:%v", configs.CacheHost, configs.CachePort)
+	log.Println("Строка подключения к мемкешу:", connStr)
+
 	cacheServer := memcache.New(connStr)
 	cacheServer.Timeout = 5 * time.Second
 	return &SessionCache{
