@@ -31,7 +31,7 @@ func (r *AuthPostgres) CreateUser(userModel models.UserSignUp) (int, error) {
 
 	tx, err := r.db.Begin()
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("repository.CreateUser ошибка создания транзакции: %v", err)
 	}
 
 	user := entity.Users{
