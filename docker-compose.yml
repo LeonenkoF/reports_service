@@ -8,6 +8,8 @@ services:
       - --threads=4
     ports:
       - 11211:11211
+    networks:
+      - postgres
       
   postgres:
     container_name: postgres_complaint_service_1

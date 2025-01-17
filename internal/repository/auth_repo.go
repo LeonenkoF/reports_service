@@ -4,6 +4,7 @@ import (
 	"complaint_service/internal/entity"
 	"complaint_service/internal/models"
 	"fmt"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -56,9 +57,19 @@ GetUser отправляет SELECT запрос в базу данных для
 возвращает структуру User и ошибку типа error
 */
 func (r *AuthPostgres) GetUser(username, password string) (entity.Users, error) {
+	op := "GetUser"
+	log.Println("Старт", op)
+
+	log.Printf("Входящий username: %s, password: %s", username, password)
 	var user entity.Users
 	query := fmt.Sprintf("SELECT id FROM %s WHERE username=$1 AND password=$2", usersTable)
+	log.Println("Сформирована строка подключения:", query)
+
 	err := r.db.Get(&user, query, username, password)
+	if err != nil {
+		log.Printf("%s: %s", op, err)
+	}
+	log.Println("Получены данные:", user)
 
 	return user, err
 }

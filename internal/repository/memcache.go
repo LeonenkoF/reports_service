@@ -17,7 +17,7 @@ type SessionCache struct {
 func NewSessionCache() *SessionCache {
 	configs, err := config.LoadEnv()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	connStr := fmt.Sprintf("%v:%v", configs.CacheHost, configs.CachePort)
