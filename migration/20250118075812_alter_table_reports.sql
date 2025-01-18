@@ -17,6 +17,10 @@ ALTER COLUMN stage TYPE stage USING CASE
     WHEN stage = 4 THEN 'canceled'::stage
     ELSE NULL
 END;
+
+ALTER TABLE reports
+ALTER COLUMN stage SET DEFAULT 'new'::stage,
+ALTER COLUMN uuid TYPE UUID USING uuid::UUID;
 -- +goose StatementEnd
 
 -- +goose Down

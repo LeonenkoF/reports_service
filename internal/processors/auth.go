@@ -68,8 +68,8 @@ func (s *AuthService) GenerateToken(username, password string) (string, error) {
 		fmt.Println(err)
 	}
 
-	//user.Password = generatePasswordHash(user.Password)
-	user, err := s.repo.GetUser(username, generatePasswordHash(password))
+	password = generatePasswordHash(password)
+	user, err := s.repo.GetUser(username, password)
 	if err != nil {
 		log.Printf("%s: %s", op, err)
 		return "", fmt.Errorf("%s: %w", op, err)
