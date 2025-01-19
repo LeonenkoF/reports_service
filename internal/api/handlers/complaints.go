@@ -9,6 +9,12 @@ import (
 	"github.com/gofiber/fiber"
 )
 
+const (
+	successful        = "успешная регистрация"
+	badRequestReport  = "ошибка запроса"
+	serverErrorReport = "ошибка сервера"
+)
+
 func (h *ComplaintsHandler) CreateReport(c *fiber.Ctx) {
 	var input models.Reports
 	token := strings.TrimPrefix(c.Get("Authorization"), "Bearer ")
@@ -18,7 +24,7 @@ func (h *ComplaintsHandler) CreateReport(c *fiber.Ctx) {
 		c.Status(fiber.StatusBadRequest).JSONP(
 			models.ResponseSignUp{
 				Id:     0,
-				Status: badRequest,
+				Status: badRequestReport,
 			})
 	}
 
@@ -27,7 +33,7 @@ func (h *ComplaintsHandler) CreateReport(c *fiber.Ctx) {
 		err = c.Status(fiber.StatusBadRequest).JSONP(
 			models.ResponseSignUp{
 				Id:     0,
-				Status: badRequest,
+				Status: badRequestReport,
 			})
 		return
 	}
@@ -39,7 +45,7 @@ func (h *ComplaintsHandler) CreateReport(c *fiber.Ctx) {
 		err = c.Status(fiber.StatusInternalServerError).JSONP(
 			models.ResponseSignUp{
 				Id:     0,
-				Status: fmt.Sprintf("%v: %v", serverError, err),
+				Status: fmt.Sprintf("%v: %v", serverErrorReport, err),
 			})
 		return
 	}
@@ -47,7 +53,7 @@ func (h *ComplaintsHandler) CreateReport(c *fiber.Ctx) {
 	err = c.Status(fiber.StatusOK).JSONP(
 		models.ResponseSignUp{
 			Id:     id,
-			Status: successfulReg,
+			Status: successful,
 		})
 	if err != nil {
 		log.Println(err)
